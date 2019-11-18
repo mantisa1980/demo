@@ -1,0 +1,36 @@
+version: '3.2'
+
+networks:
+  vpcbr:
+    driver: bridge
+
+services:
+  redis:
+    image: redis
+    volumes:
+      - type: volume
+        source: redis-data
+        target: /data
+    ports:
+      - "6379:6379"
+    networks:
+      - vpcbr
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"
+    tty: true
+    volumes:
+      - type: volume
+        source: mongo-data
+        target: /data/db
+    entrypoint:
+      - mongod
+      - "--bind_ip"
+      - "0.0.0.0"
+    networks:
+      - vpcbr
+
+volumes:
+  redis-data:
+  mongo-data:
